@@ -1,0 +1,27 @@
+#!/bin/sh
+case $ZSH_VERSION in ?*) alias -g '${1+"$@"}="$@"'; esac
+args=`esceval ${1+"$@"}`
+
+fakeColon='：'
+
+until [ $# = 0 ]
+do
+ case $1 in
+ --)
+  shift
+  id=$1
+  break
+  ;;
+ -*)
+  ;;
+ *)
+  id=$1
+  break
+ esac
+ shift
+done
+
+mkdir -p ~/.ssh_history || return 1
+timestamp=`date -Is | sed s/:/$fakeColon/g`
+logfile=`mktemp ~/.ssh_history/"$id"_"$timestamp"_XXXXXX` || return 2
+eval exec ssh "$args" | tee "$logfile"
