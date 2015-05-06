@@ -19,8 +19,6 @@
 case $ZSH_VERSION in ?*) alias -g '${1+"$@"}="$@"'; esac
 args=`esceval ${1+"$@"}`
 
-fakeColon='：'
-
 until [ $# = 0 ]
 do
  case $1 in
@@ -39,6 +37,19 @@ do
 done
 
 mkdir -p ~/.ssh_history || return 1
-timestamp=`date -Is | sed s/:/$fakeColon/g`
+
+# Windows does not support colons in filenames. ISO8601 allows for time to be
+# specified with or without colons, so we drop colons on Windows.
+case `uname` in
+*_NT*)
+ timestamp=`date -Is | sed s/://g`
+ # If you wanted you could use a "look-alike" character for the colon instead,
+ # but then the timestamps in your log file names would not be ISO8601
+ # compliant, if you care about that sort of thing. For example:
+ # timestamp=`date -Is | sed s/:/ː/g`
+ ;;
+*)
+ timestamp=`date -Is`
+esac
 logfile=`mktemp ~/.ssh_history/"$id"_"$timestamp"_XXXXXX` || return 2
 eval exec ssh "$args" | tee "$logfile"
