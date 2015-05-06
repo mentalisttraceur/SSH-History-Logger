@@ -33,6 +33,6 @@ esac
 
 logfile=`mktemp ~/.ssh_history/"$timestamp"_"$*"_XXXXXX` || return 2
 
-exitcode=`((ssh ${1+"$@"} 1>&3; echo $?) | tee "$logfile")` 3>&1
+exitcode=`((ssh ${1+"$@"}; echo $? 1>&3) | tee "$logfile" 1>&4) 3>&1` 4>&1
 
 return $exitcode
