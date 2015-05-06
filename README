@@ -1,8 +1,7 @@
-sshh
-SSH History
+SSH History Logger
 
-sshh is a small wrapper shell script around the 'ssh' command, which saves the
-output and input of your ssh sessions.
+SSH History Logger is a small wrapper shell script around the 'ssh' command,
+which saves the output and input of your ssh sessions.
 
 Loosely following the convention set by shells, it creates a folder in your
 $HOME folder called .ssh_history, then places log files there for each session
