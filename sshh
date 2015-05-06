@@ -37,6 +37,14 @@ do
  shift
 done
 
+# If no username was specified, add the default one to the log file name.
+case $id in
+*@*)
+ ;;
+*)
+ id=$USER@$id
+esac
+
 # Create the folder with user-only read+search permissions if it doesn't exist.
 mkdir -m 700 -p ~/.ssh_history || return 1
 
