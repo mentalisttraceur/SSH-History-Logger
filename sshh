@@ -17,35 +17,6 @@
 # 59 Temple Place, Suite 330 Boston MA 02111-1307 USA.
 
 case $ZSH_VERSION in ?*) alias -g '${1+"$@"}="$@"'; esac
-args=`esceval ${1+"$@"}`
-
-while :
-do
- case $# in 0) break; esac
- case $1 in
- --)
-  shift
-  id=$1
-  break
-  ;;
- -*)
-  # Option detected, skip next argument.
-  shift
-  ;;
- *)
-  id=$1
-  break
- esac
- shift
-done
-
-# If no username was specified, add the default one to the log file name.
-case $id in
-*@*)
- ;;
-*)
- id=$USER@$id
-esac
 
 # Create the folder with user-only read+search permissions if it doesn't exist.
 mkdir -m 700 -p ~/.ssh_history || return 1
@@ -60,6 +31,6 @@ case `uname` in
  timestamp=`date -Is`
 esac
 
-logfile=`mktemp ~/.ssh_history/"$id"_"$timestamp"_XXXXXX` || return 2
-exitcode=`((eval ssh "$args"; echo $? 1>&3) | tee "$logfile") 3>&1`
+logfile=`mktemp ~/.ssh_history/${1+"$@"}_"$timestamp"_XXXXXX` || return 2
+exitcode=`((ssh ${1+"$@"}; echo $? 1>&3) | tee "$logfile") 3>&1`
 return $exitcode
