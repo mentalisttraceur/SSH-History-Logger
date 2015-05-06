@@ -29,6 +29,8 @@ do
   break
   ;;
  -*)
+  # Option detected, skip next argument.
+  shift
   ;;
  *)
   id=$1
