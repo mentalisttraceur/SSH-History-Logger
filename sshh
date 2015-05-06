@@ -19,8 +19,9 @@
 case $ZSH_VERSION in ?*) alias -g '${1+"$@"}="$@"'; esac
 args=`esceval ${1+"$@"}`
 
-until [ $# = 0 ]
+while :
 do
+ case $# in 0) break; esac
  case $1 in
  --)
   shift
