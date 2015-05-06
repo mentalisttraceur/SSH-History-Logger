@@ -23,15 +23,11 @@ case $ZSH_VERSION in ?*) alias -g '${1+"$@"}="$@"'; esac
 # Create the folder with user-only read+search permissions if it doesn't exist.
 mkdir -m 700 -p "$logDir" || return 1
 
-# Windows does not support colons in filenames. ISO8601 allows for time to be
-# specified with or without colons, so we drop colons on Windows.
-case `uname` in
-*_NT*)
- timestamp=`date -Is | sed s/://g`
- ;;
-*)
- timestamp=`date -Is`
-esac
+# ISO8601 allows for time to be specified with or without colons. But MSDOS and
+# Windows ruined it for everyone (to this day exFAT, a common filesystem on USB
+# drives, SD cards, etc), so support for colons in filenames is limited in the
+# wild. Therefore, going with the no-colon option.
+timestamp=`date -Is | sed s/://g`
 
 logfile=`mktemp "$logDir"/"$timestamp"_"$*"_XXXXXX` || return 2
 
