@@ -1,0 +1,16 @@
+sshh
+SSH History
+
+sshh is a small wrapper shell script around the 'ssh' command, which saves the
+output and input of your ssh sessions.
+
+Loosely following the convention set by shells, it creates a folder in your
+$HOME folder called .ssh_history, then places log files there for each session
+you have over ssh (assuming you invoked ssh through it).
+
+It strives to be completely transparent, so that you don't have to change your
+command line syntax for invoking the ssh command when using it. Simply invoke
+'sshh' instead of 'ssh' with the same options you would use normally with ssh,
+and so long as the ssh command is also in your path and it can create your log
+files and (if needed) set up your ~/.ssh_history folder for you succesfully,
+it'll "just work".
