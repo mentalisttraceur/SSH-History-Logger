@@ -37,7 +37,8 @@ do
  shift
 done
 
-mkdir -p ~/.ssh_history || return 1
+# Create the folder with user-only read+search permissions if it doesn't exist.
+mkdir -m 700 -p ~/.ssh_history || return 1
 
 # Windows does not support colons in filenames. ISO8601 allows for time to be
 # specified with or without colons, so we drop colons on Windows.
