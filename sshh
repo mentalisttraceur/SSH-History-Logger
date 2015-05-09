@@ -1,6 +1,6 @@
 #!/bin/sh
-# SSH History Logger 1.0.0
-# Copyright (C) Alexander Kozhevnikov <mentalisttraceur@gmail.com> 2015-05-06;
+# SSH History Logger 1.0.1
+# Copyright (C) Alexander Kozhevnikov <mentalisttraceur@gmail.com> 2015-05-09;
 # 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public Licence as published by
@@ -33,6 +33,8 @@ timestamp=`date -Is | sed s/://g`
 
 logfile=`mktemp "$logDir"/"$timestamp"_"$*"_XXXXXX` || exit 2
 
-exitcode=`((ssh ${1+"$@"}; echo $? 1>&3) | tee "$logfile" 1>&4) 3>&1` 4>&1
+exec 4>&1
+exitcode=`((ssh ${1+"$@"}; echo $? 1>&3) | tee "$logfile" 1>&4) 3>&1`
+exec 4>&-
 
 exit $exitcode
