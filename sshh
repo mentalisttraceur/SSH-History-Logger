@@ -22,7 +22,7 @@ logDir=~/.ssh_history
 case $ZSH_VERSION in ?*) alias -g '${1+"$@"}="$@"'; esac
 
 # Create the folder with user-only read+search permissions if it doesn't exist.
-mkdir -m 700 -p "$logDir" || return 1
+mkdir -m 700 -p "$logDir" || exit 1
 
 # ISO8601 allows for time to be specified with or without colons. But MSDOS and
 # Windows ruined it for everyone (to this day exFAT, a common filesystem on USB
@@ -31,8 +31,8 @@ mkdir -m 700 -p "$logDir" || return 1
 # no-colon option.
 timestamp=`date -Is | sed s/://g`
 
-logfile=`mktemp "$logDir"/"$timestamp"_"$*"_XXXXXX` || return 2
+logfile=`mktemp "$logDir"/"$timestamp"_"$*"_XXXXXX` || exit 2
 
 exitcode=`((ssh ${1+"$@"}; echo $? 1>&3) | tee "$logfile" 1>&4) 3>&1` 4>&1
 
-return $exitcode
+exit $exitcode
