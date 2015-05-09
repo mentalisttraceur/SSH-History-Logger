@@ -26,8 +26,9 @@ mkdir -m 700 -p "$logDir" || return 1
 
 # ISO8601 allows for time to be specified with or without colons. But MSDOS and
 # Windows ruined it for everyone (to this day exFAT, a common filesystem on USB
-# drives, SD cards, etc), so support for colons in filenames is limited in the
-# wild. Therefore, going with the no-colon option.
+# drives, SD cards, etc, does not support colons in filenames), so support for
+# colons in filenames is limited in the wild. Therefore, going with the
+# no-colon option.
 timestamp=`date -Is | sed s/://g`
 
 logfile=`mktemp "$logDir"/"$timestamp"_"$*"_XXXXXX` || return 2
