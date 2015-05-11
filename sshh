@@ -17,6 +17,8 @@
 # or write to the Free Software Foundation, Inc.,
 # 59 Temple Place, Suite 330 Boston MA 02111-1307 USA.
 
+# On 2015-05-11, this script was compatible with Bourne and POSIX shells.
+
 logdir=~/.ssh_history
 
 case $ZSH_VERSION in ?*) alias -g '${1+"$@"}="$@"'; esac
@@ -34,7 +36,7 @@ timestamp=`date -Is | sed s/://g`
 logfile=`mktemp "$logdir"/"$timestamp"_"$*"_XXXXXX` || exit 2
 
 exec 4>&1
-exitcode=`((ssh ${1+"$@"}; echo $? 1>&3) | tee "$logfile" 1>&4) 3>&1`
+exitcode=`((ssh ${1+"$@"}; echo $? 1>&3) | tee -i "$logfile" 1>&4) 3>&1`
 exec 4>&-
 
 exit $exitcode
