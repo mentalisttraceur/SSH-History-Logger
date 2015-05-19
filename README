@@ -1,4 +1,4 @@
-SSH History Logger
+-= SSH History Logger =-
 
 SSH History Logger is a small wrapper shell script around the 'ssh' command,
 which saves the output and input of your ssh sessions.
