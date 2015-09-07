@@ -33,6 +33,8 @@ mkdir -m 700 -p "$logdir" || exit 1
 # no-colon option.
 timestamp=`date -Is | sed s/://g`
 
+# Create logfile, fail if unable to do so, since that defeats the whole point
+# of this script.
 logfile=`mktemp "$logdir"/"$timestamp"_"$*"_XXXXXX` || exit 2
 
 exec 4>&1
