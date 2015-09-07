@@ -39,10 +39,39 @@ timestamp=`date -Is | sed s/://g`
 # of this script.
 logfile=`mktemp "$logdir"/"$timestamp"_"$*"_XXXXXX` || exit 2
 
-logger()
-{
- tee -i "$logfile" 1>&4
-}
+# Set up the logging part of the pipeline through which the SSH command output
+# is ran, depending on what commands are available.
+if command -v vee 1>/dev/null 2>&1
+then
+ # If we have vee, then we can split the output into two that way.
+ logger()
+ {
+  vee -i 1 4 > "$logfile"
+ }
+# We could add other "better" but less portable things, like /dev/fd usage, in
+# here, in elif clauses.
+else
+ # If we don't have vee, the next portable way is to use a named pipe.
+ logpipe=$logfile.pipe
+ if mkfifo -m 600 "$logpipe"
+ then
+  logger()
+  {
+   # If we succesfully made the pipe, then we utilize it along with tee here.
+   cat "$logpipe" > "$logfile" &
+   tee -i "$logpipe" 1>&4
+   rm "$logpipe"
+  }
+ else
+  logger()
+  {
+   # If we failed to make the pipe, we print a warning, then "gracefully" drop
+   # the log-modifying functionality, and just log it with tee directly to the
+   # logfile "raw".
+   tee -i "$logfile" 1>&4
+  }
+ fi
+fi
 
 exec 4>&1
 exitcode=`
